@@ -1,5 +1,7 @@
 package com.example.patient_service.dto;
 
+import com.example.patient_service.dto.validators.CreatePatientValidateGroup;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -19,7 +21,7 @@ public class PatientRequestDTO {
   @NotBlank(message = "Date of Birth is required")
   private String dateOfBirth;
 
-  @NotBlank(message = "Registeration date is required")
+  @NotBlank(groups = CreatePatientValidateGroup.class, message = "Registeration date is required")
   private String registrationDate;
 
   public String getName() {
