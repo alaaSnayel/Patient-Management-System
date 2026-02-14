@@ -1,4 +1,18 @@
-version: "3.9"
+# version: "3.9"
+
+# services:
+#   billing-service:
+#     image: billing-service:latest
+#     container_name: billing-service
+#     ports:
+#       - "4001:4001"
+#       - "9001:9001"
+#     networks:
+#       - internal
+
+# networks:
+#   internal:
+#     driver: bridge
 
 services:
   billing-service:
@@ -12,4 +26,4 @@ services:
 
 networks:
   internal:
-    driver: bridge
+    external: true

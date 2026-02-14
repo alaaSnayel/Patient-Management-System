@@ -1,3 +1,44 @@
+# version: "3.9"
+
+# services:
+#   patient-service-db:
+#     image: postgres:16
+#     container_name: patient-service-db
+#     environment:
+#       POSTGRES_DB: patientdb
+#       POSTGRES_USER: postgres
+#       POSTGRES_PASSWORD: postgres
+#     ports:
+#       - "5432:5432"
+#     volumes:
+#       - patient-service-db-data:/var/lib/postgresql/data
+#     healthcheck:
+#       test: ["CMD-SHELL", "pg_isready -U postgres"]
+#       interval: 5s
+#       timeout: 5s
+#       retries: 5
+
+#   patient-service:
+#     build: .
+#     container_name: patient-service
+#     ports:
+#       - "4000:4000"
+#     depends_on:
+#       patient-service-db:
+#         condition: service_healthy
+#     environment:
+#       SPRING_DATASOURCE_URL: jdbc:postgresql://patient-service-db:5432/patientdb
+#       SPRING_DATASOURCE_USERNAME: postgres
+#       SPRING_DATASOURCE_PASSWORD: postgres
+#       SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+#       # ---- Billing Service gRPC Config ----
+#       BILLING_SERVICE_ADDRESS: billing-service
+#       BILLING_SERVICE_GRPC_PORT: 9001
+
+# volumes:
+#   patient-service-db-data:
+
 services:
   patient-service-db:
     image: postgres:16
@@ -10,11 +51,8 @@ services:
       - "5432:5432"
     volumes:
       - patient-service-db-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+    networks:
+      - internal
 
   patient-service:
     build: .
@@ -22,13 +60,20 @@ services:
     ports:
       - "4000:4000"
     depends_on:
-      patient-service-db:
-        condition: service_healthy
+      - patient-service-db
+      # - billing-service # optional, see note below
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://patient-service-db:5432/patientdb
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      BILLING_SERVICE_ADDRESS: billing-service
+      BILLING_SERVICE_GRPC_PORT: 9001
+    networks:
+      - internal
 
 volumes:
   patient-service-db-data:
+
+networks:
+  internal:
+    external: true
