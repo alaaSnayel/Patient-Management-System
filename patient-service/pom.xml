@@ -147,7 +147,7 @@
                 <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.68.1:exe:${os.detected.classifier}</pluginArtifact>
             </configuration>
             <executions>
-                <execution> 
+                <execution>
                     <goals>
                         <goal>compile</goal>
                         <goal>compile-custom</goal>
